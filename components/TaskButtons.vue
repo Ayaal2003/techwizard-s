@@ -1,29 +1,48 @@
 <template>
-  <div class="task-buttons">
-    <!-- Кнопки с заданиями -->
-    <button
+  <div class="tasks-page">
+    <!-- Кнопки заданий -->
+    <div
       v-for="(task, index) in tasks"
       :key="index"
-      @click="openModal(index)"
+      :class="['task-button', task.customClass]"
+      :style="task.customStyle"
+      @click="openModal(task)"
     >
-      Задание {{ index + 1 }}
-    </button>
+      {{ task.name }}
+    </div>
 
-    <!-- Модальное окно с анимацией -->
-    <transition name="modal">
-      <div v-if="isModalOpen" class="modal" @click.self="closeModal">
+    <!-- Модальное окно для заданий -->
+    <transition name="modal" @after-leave="resetModal">
+      <div v-if="activeTask" class="modal-overlay" @click.self="closeModal">
         <div class="modal-content">
-          <!-- Кнопка закрытия -->
           <span class="close" @click="closeModal">&times;</span>
+          <h2>{{ activeTask.name }}</h2>
+          <p>{{ activeTask.description }}</p>
+          <p v-if="activeTask.name !== 'Квизы'">
+            Баллы за выполнение: {{ activeTask.points }}
+          </p>
 
-          <!-- Заголовок -->
-          <h2>Задание {{ currentTaskIndex + 1 }}</h2>
-
-          <!-- Описание задания -->
-          <p>{{ tasks[currentTaskIndex].description }}</p>
+          <!-- Специальный контент для квиза -->
+          <div v-if="activeTask.name === 'Квизы'" class="quiz-content">
+            <p>Вопрос: 2 + 2 = ?</p>
+            <input
+              v-model="quizAnswer"
+              type="number"
+              placeholder="Введите ответ"
+            />
+            <button @click="submitQuizAnswer">Ответить</button>
+            <p>Баллы за правильный ответ: {{ activeTask.points }}</p>
+          </div>
         </div>
       </div>
     </transition>
+
+    <!-- Отображение текущих баллов -->
+    <div class="tasks-window">
+      <div class="tasks-icon">
+        <span>Баллы: {{ totalPoints }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -31,124 +50,65 @@
 export default {
   data() {
     return {
-      isModalOpen: false, // Состояние модального окна
-      currentTaskIndex: 0, // Индекс текущего задания
+      activeTask: null,
+      quizAnswer: "",
+      totalPoints: 120, // Начальные баллы
       tasks: [
         {
-          description: "Описание задания 1: Сделать что-то важное.",
+          name: "Сверхурочная работа",
+          description: "Выполнение задач в нерабочее время.",
+          points: 20,
+          customClass: "overtime-task",
+          customStyle: { backgroundColor: "#FF5722", color: "#FFFFFF" },
         },
         {
-          description: "Описание задания 2: Проверить отчеты.",
+          name: "Работа в выходные",
+          description: "Работа в выходной день начисляет 30 баллов.",
+          points: 30,
+          customClass: "weekend-task",
+          customStyle: { backgroundColor: "#3F51B5", color: "#FFFFFF" },
         },
         {
-          description: "Описание задания 3: Подготовить презентацию.",
+          name: "Помощь коллегам",
+          description: "Помогайте коллегам и зарабатывайте баллы.",
+          points: 50,
+          customClass: "help-task",
+          customStyle: { backgroundColor: "#4CAF50", color: "#FFFFFF" },
         },
         {
-          description: "Описание задания 4: Отправить письмо клиенту.",
+          name: "Квизы",
+          description: "Пройдите квиз и получите до 40 баллов.",
+          points: 40,
+          customClass: "quiz-task",
+          customStyle: { backgroundColor: "#9C27B0", color: "#FFFFFF" },
         },
       ],
     };
   },
   methods: {
-    // Открыть модальное окно
-    openModal(index) {
-      this.currentTaskIndex = index;
-      this.isModalOpen = true;
+    openModal(task) {
+      this.activeTask = task;
     },
-    // Закрыть модальное окно
     closeModal() {
-      this.isModalOpen = false;
+      this.activeTask = null;
+      this.quizAnswer = "";
+    },
+    resetModal() {
+      this.closeModal();
+    },
+    submitQuizAnswer() {
+      if (parseInt(this.quizAnswer) === 4) {
+        this.totalPoints += this.activeTask.points;
+        alert(
+          "Правильный ответ! Вам начислено " +
+            this.activeTask.points +
+            " баллов."
+        );
+        this.closeModal();
+      } else {
+        alert("Неправильный ответ. Попробуйте снова!");
+      }
     },
   },
 };
 </script>
-
-<style scoped>
-/* Стили для кнопок */
-.task-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* Стили для модального окна */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  text-align: center;
-  position: relative;
-}
-
-.close {
-  font-size: 24px;
-  cursor: pointer;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-.close:hover {
-  color: #000;
-}
-
-/* Анимация для модального окна */
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-to,
-.modal-leave-from {
-  opacity: 1;
-}
-
-/* Анимация для содержимого модального окна */
-.modal-content {
-  animation: scaleUp 0.3s ease;
-}
-
-@keyframes scaleUp {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-</style>

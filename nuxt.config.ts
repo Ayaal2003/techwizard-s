@@ -1,4 +1,5 @@
 import { addDevServerHandler } from "nuxt/kit";
+import { createRouter, createWebHistory } from "vue-router";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({

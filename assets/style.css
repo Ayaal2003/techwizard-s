@@ -1,6 +1,176 @@
 body {
-  background-color: #ffffff;
+  background-color: #212121;
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
+}
+
+.profile-image-container {
+  display: absolute;
+  /* Выравнивание по центру */
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+/* Стили для округлённого изображения */
+.profile-image {
+  position: absolute;
+  width: 128px; /* Размер изображения */
+  height: 128px;
+  border-radius: 50%; /* Делает изображение круглым */
+  object-fit: cover; /* Сохраняет пропорции изображения */
+  border: 3px solid #212121; /* Рамка вокруг изображения */
+}
+
+.profile-image.left-bottom {
+  bottom: 10px;
+  left: 10px;
+}
+
+.shkala-image-container {
+  display: flex;
+  /* Выравнивание по центру */
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.shkala-image {
+  position: absolute;
+  width: 160px; /* Размер изображения */
+  height: 160px;
+  top: 320px;
+  right: 112px;
+  object-fit: cover; /* Сохраняет пропорции изображения */
+  border: 1px solid #212121; /* Рамка вокруг изображения */
+}
+
+.shkala-image.left-bottom {
+  bottom: 10px;
+  left: 10px;
+}
+
+/* Основные стили */
+.tasks-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.task-button {
+  padding: 15px 30px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  transition: all 0.3s;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Анимация модального окна */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* Стили поля ввода и кнопки квиза */
+.quiz-content input {
+  margin: 10px 0;
+  padding: 8px;
+  width: 80%;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.quiz-content button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Примеры пользовательских классов для кнопок */
+.overtime-task {
+  border: 2px solid #ff8a65;
+}
+
+.weekend-task {
+  border: 2px solid #7986cb;
+}
+
+.help-task {
+  border: 2px solid #81c784;
+}
+
+.quiz-task {
+  border: 2px solid #ba68c8;
+}
+
+/* Отображение текущих баллов */
+.tasks-window {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.tasks-icon {
+  background-color: #1c1c1d;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border: 1px solid #111;
 }
